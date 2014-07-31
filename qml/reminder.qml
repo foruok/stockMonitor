@@ -27,9 +27,10 @@ Window {
         anchors.bottom: parent.verticalCenter;
         text: qsTr("Lose");
         width: 100;
-        height: 25;
+        height: 30;
         horizontalAlignment: Text.AlignRight;
-        font.pixelSize: 16;
+        verticalAlignment: Text.AlignVCenter;
+        font.pixelSize: 18;
     }
 
     Rectangle {
@@ -38,7 +39,7 @@ Window {
         anchors.leftMargin: 4;
         anchors.bottom: parent.verticalCenter;
         width: 100;
-        height: 25;
+        height: 30;
         border.width: 1;
         border.color: "#2020A0";
 
@@ -49,10 +50,10 @@ Window {
             anchors.right: parent.right;
             anchors.rightMargin: 2;
             anchors.verticalCenter: parent.verticalCenter;
-            height: 25;
+            height: parent.height;
             width: parent.width - 4;
             verticalAlignment: TextInput.AlignVCenter;
-            font.pixelSize: 16;
+            font.pixelSize: 20;
             validator: DoubleValidator{}
             //text: currentStock.loss;
             //Component.onCompleted: text = currentStock.loss;
@@ -66,9 +67,10 @@ Window {
         anchors.bottomMargin: 4;
         text: qsTr("Gain");
         width: 100;
-        height: 25;
+        height: 30;
         horizontalAlignment: Text.AlignRight;
-        font.pixelSize: 16;
+        verticalAlignment: Text.AlignVCenter;
+        font.pixelSize: 18;
     }
 
     Rectangle {
@@ -78,7 +80,7 @@ Window {
         anchors.bottom: loseFrame.top;
         anchors.bottomMargin: 4;
         width: 100;
-        height: 25;
+        height: 30;
         border.width: 1;
         border.color: "#2020A0";
 
@@ -89,10 +91,10 @@ Window {
             anchors.right: parent.right;
             anchors.rightMargin: 2;
             anchors.verticalCenter: parent.verticalCenter;
-            height: 25;
+            height: parent.height;
             width: parent.width - 4;
             verticalAlignment: TextInput.AlignVCenter;
-            font.pixelSize: 16;
+            font.pixelSize: 20;
             validator: DoubleValidator{}
             //text: currentStock.gain;
         }
@@ -103,7 +105,7 @@ Window {
         anchors.bottomMargin: 4;
         anchors.horizontalCenter: parent.horizontalCenter;
         height: 26;
-        font.pixelSize: 16;
+        font.pixelSize: 18;
         text: currentStock.name() + " : " + currentStock.price();
     }
 
@@ -113,8 +115,8 @@ Window {
         anchors.rightMargin: 4;
         anchors.top: parent.verticalCenter;
         anchors.topMargin: 8;
-        width: 60;
-        height: 25;
+        width: 70;
+        height: 30;
         text: qsTr("Cancel");
         onClicked: reminder.canceled();
     }
@@ -124,8 +126,8 @@ Window {
         anchors.leftMargin: 4;
         anchors.top: parent.verticalCenter;
         anchors.topMargin: 8;
-        width: 60;
-        height: 25;
+        width: 70;
+        height: 30;
         text: qsTr("Apply");
         onClicked: {
             currentStock.loss = loseEditor.text;

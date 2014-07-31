@@ -50,18 +50,18 @@ Window {
         anchors.left: parent.left;
         anchors.leftMargin: 4;
         spacing: 8;
-        height: 25;
+        height: 30;
         Text {
             text: qsTr("Stock Code");
-            height: 25;
+            height: 30;
             verticalAlignment: Text.AlignVCenter;
-            font.pixelSize: 14;
+            font.pixelSize: 16;
         }
         Rectangle {
             border.width: 1;
             border.color: "#2020A0";
-            width: 60;
-            height: 25;
+            width: 70;
+            height: 30;
 
             TextInput {
                 id: stockCodeEdit;
@@ -74,18 +74,18 @@ Window {
                 anchors.right: parent.right;
                 anchors.rightMargin: 2;
                 anchors.verticalCenter: parent.verticalCenter;
-                height: 25;
+                height: parent.height;
                 width: parent.width - 4;
                 verticalAlignment: TextInput.AlignVCenter;
-                font.pixelSize: 16;
+                font.pixelSize: 18;
             }
         }
         Button {
             text: qsTr("Add");
             style: ButtonStyle {
                 background: Rectangle {
-                    implicitWidth: 60
-                    implicitHeight: 25
+                    implicitWidth: 70
+                    implicitHeight: 30
                     border.width: control.activeFocus ? 2 : 1
                     border.color: "#808080"
                     radius: 4
@@ -102,7 +102,7 @@ Window {
                 }
                 label: Text {
                     text: control.text;
-                    font.pixelSize: 16;
+                    font.pixelSize: 18;
                     horizontalAlignment: Text.AlignHCenter;
                     verticalAlignment: Text.AlignVCenter;
                 }
@@ -117,9 +117,9 @@ Window {
         }
         Text {
             text: qsTr("add comments");
-            height: 25;
+            height: 30;
             verticalAlignment: Text.AlignVCenter;
-            font.pixelSize: 14;
+            font.pixelSize: 16;
             color: "darkgray";
         }
     }
@@ -138,7 +138,7 @@ Window {
             textColor: "black";
             headerDelegate: Canvas {
                 implicitWidth: 10;
-                implicitHeight: 28;
+                implicitHeight: 32;
                 onPaint: {
                     var ctx = getContext("2d");
                     ctx.fillStyle = "#E8E8EC";
@@ -154,7 +154,7 @@ Window {
                     ctx.moveTo(0, canvasSize.height - 1);
                     ctx.lineTo(canvasSize.width, canvasSize.height - 1);
                     ctx.stroke();
-                    ctx.font = "18px sans-serif";
+                    ctx.font = "22px sans-serif";
                     ctx.textAlign = "right";
                     ctx.fillStyle = "#000099";
                     ctx.textBaseline = "middle";
@@ -166,7 +166,7 @@ Window {
                 text: styleData.value;
                 verticalAlignment: Text.AlignVCenter;
                 horizontalAlignment: Text.AlignRight;
-                font.pixelSize: 16;
+                font.pixelSize: 20;
                 //color: stockTable.colorOf(styleData.row);
                 elide: styleData.elideMode;
                 onTextChanged: {
@@ -180,7 +180,7 @@ Window {
                 }
             }
             rowDelegate: Rectangle {
-                height: 24; // row height
+                height: 30; // row height
                 color: styleData.selected ? "lightsteelblue" :
                   (styleData.alternate ? tstyle.backgroundColor
                                            : tstyle.alternateBackgroundColor);
@@ -195,7 +195,7 @@ Window {
             delegate: Text {
                 color: "#551A8B";
                 text: styleData.value;
-                font.pixelSize: 16;
+                font.pixelSize: 18;
                 verticalAlignment: Text.AlignVCenter;
                 horizontalAlignment: Text.AlignRight;
             }
@@ -208,7 +208,7 @@ Window {
             delegate: Text {
                 color: "#551A8B";
                 text: styleData.value;
-                font.pixelSize: 16;
+                font.pixelSize: 18;
                 verticalAlignment: Text.AlignVCenter;
                 horizontalAlignment: Text.AlignRight;
             }
@@ -231,28 +231,30 @@ Window {
             width: 80;
             movable: false;
         }
+        /*
         TableViewColumn{
             role: "turnover";
             title: qsTr("Turnover");
             width: 80;
             movable: false;
         }
+        */
         TableViewColumn{
             role: "upDown";
             title: qsTr("Up/Down");
-            width: 100;
+            width: 150;
             movable: false;
         }
         TableViewColumn{
             role: "stopLose";
             title: qsTr("Lose");
-            width: 75;
+            width: 85;
             movable: false;
         }
         TableViewColumn{
             role: "stopGain";
             title: qsTr("Gain");
-            width: 75;
+            width: 85;
             movable: false;
         }
         TableViewColumn{

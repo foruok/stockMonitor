@@ -17,6 +17,10 @@ SOURCES += main.cpp \
 RESOURCES += \
     stockMonitor.qrc
 
+android-g++ {
+    LIBS += -lgnustl_shared
+}
+
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 OTHER_FILES += \
