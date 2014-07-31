@@ -708,6 +708,8 @@ void StockProvider::parseData(const QByteArray &data)
     int size = stocksData.size();
     if(size == 0) return;
 
+    m_strRemind.clear();
+
     for(int i = 0; i < size; i++)
     {
         QByteArray  d = stocksData.at(i).trimmed();
@@ -730,6 +732,8 @@ void StockProvider::parseData(const QByteArray &data)
     if(m_bShouldSave) saveToFile();
 
     emit refreshed();
+
+    if(m_strRemind.length() > 0) emit remind(m_strRemind);
 }
 
 void StockProvider::updateStockDetail(const QByteArray &stockCode, const QByteArray &data)
@@ -770,5 +774,22 @@ void StockProvider::updateStockDetail(const QByteArray &stockCode, const QByteAr
                 detail->m_details[stock_name] = gbkCodec->toUnicode(detail->m_details.at(stock_name).data()).toUtf8();
             }
         }
+        updateRemindContents(detail);
+    }
+}
+
+void StockProvider::updateRemindContents(StockDetail *stock)
+{
+    if(stock->arriveStopLose())
+    {
+        m_strRemind += QString("%1 : %2\n")
+                .arg(stock->code().data())
+                .arg(stock->currentPrice().data());
+    }
+    else if(stock->arriveStopWin())
+    {
+        m_strRemind += QString("%1: %2\n")
+                .arg(stock->code().data())
+                .arg(stock->currentPrice().data());
     }
 }

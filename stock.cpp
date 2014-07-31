@@ -32,6 +32,7 @@ QString StockState::gain()
 
 void StockState::setGain(QString gain)
 {
+    qDebug() << "setGain - " << gain;
     m_detail->setStopWinPrice(gain.toDouble());
 }
 

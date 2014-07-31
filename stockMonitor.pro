@@ -1,6 +1,10 @@
 QT += qml quick network
 
-folder_01.source = qml
+win32|unix|macx {
+    QT += widgets
+    SOURCES += trayIcon.cpp
+    HEADERS += trayIcon.h
+}
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
     stockModel.cpp \

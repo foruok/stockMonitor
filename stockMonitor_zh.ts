@@ -2,6 +2,21 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>TrayIcon</name>
+    <message>
+        <source>stock monitor</source>
+        <translation>股票跟踪</translation>
+    </message>
+    <message>
+        <source>Exit</source>
+        <translation>退出</translation>
+    </message>
+    <message>
+        <source>Notification</source>
+        <translation>提醒</translation>
+    </message>
+</context>
+<context>
     <name>main</name>
     <message>
         <source>stock monitor</source>

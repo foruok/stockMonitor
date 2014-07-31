@@ -95,6 +95,7 @@ public:
 signals:
     void beginRefresh();
     void refreshed();
+    void remind(const QString & contents);
 
 protected slots:
     void onRefreshFinished();
@@ -107,6 +108,7 @@ protected:
     void startUpdate();
     void parseData(const QByteArray & data);
     void updateStockDetail(const QByteArray & stockCode, const QByteArray & data);
+    void updateRemindContents(StockDetail * stock);
 
 protected:
     QList<StockDetail*> m_stocks;
@@ -118,5 +120,6 @@ protected:
     int m_refreshInterval;
     QNetworkReply *m_reply;
     bool m_bShouldSave;
+    QString m_strRemind;
 };
 #endif // STOCKPROVIDER_H

@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.1
 
 Window {
+    objectName: "rootWindow";
     minimumHeight: 480;
     minimumWidth: 800;
     width: 800;
@@ -30,13 +31,15 @@ Window {
     }
 
     function onReminderSettingCanceled(){
-        reminderWindow.visible = false;
+        reminderWindow.close();
         reminderWindow.destroy(10);
+        reminderWindow = null;
     }
 
     function onReminderSettingApplied(){
-        reminderWindow.visible = false;
+        reminderWindow.close();
         reminderWindow.destroy(10);
+        reminderWindow = null;
         stockTable.model.saveState();
     }
 

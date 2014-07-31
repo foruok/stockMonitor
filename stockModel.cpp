@@ -141,6 +141,12 @@ StockState *StockModel::currentStock()
     return &m_dptr->m_currentStock;
 }
 
+void StockModel::connectToReminder(QObject *receiver, const char *method)
+{
+    QObject::connect(&m_dptr->m_stocks, SIGNAL(remind(QString)),
+                     receiver, method);
+}
+
 void StockModel::onStockDataBeginRefresh()
 {
     //beginResetModel();

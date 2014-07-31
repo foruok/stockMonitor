@@ -16,6 +16,11 @@ Window {
     signal canceled();
     signal applied();
 
+    Component.onDestruction: console.log("reminder destruction");
+    onClosing:{
+        destroy(10);
+    }
+
     Text {
         anchors.right: parent.horizontalCenter;
         anchors.rightMargin: 4;
@@ -49,6 +54,8 @@ Window {
             verticalAlignment: TextInput.AlignVCenter;
             font.pixelSize: 16;
             validator: DoubleValidator{}
+            //text: currentStock.loss;
+            //Component.onCompleted: text = currentStock.loss;
         }
     }
 
@@ -87,6 +94,7 @@ Window {
             verticalAlignment: TextInput.AlignVCenter;
             font.pixelSize: 16;
             validator: DoubleValidator{}
+            //text: currentStock.gain;
         }
     }
 

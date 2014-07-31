@@ -25,6 +25,7 @@ public:
     Q_INVOKABLE void updateCurrentStock(int row);
     Q_INVOKABLE void saveState();
     StockState* currentStock();
+    void connectToReminder(QObject *receiver, const char *method);
 
 protected slots:
     void onStockDataBeginRefresh();
