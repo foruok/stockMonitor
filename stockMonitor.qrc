@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/main.qml</file>
+        <file>qml/reminder.qml</file>
+        <file>stockMonitor_zh.qm</file>
+    </qresource>
+</RCC>
