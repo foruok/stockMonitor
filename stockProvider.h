@@ -17,7 +17,7 @@ public:
     StockDetail(const QByteArray & stockCode);
     ~StockDetail();
 
-    const bool detailAvailable() const;
+    bool detailAvailable() const;
 
     const QByteArray & name() const;
     const QByteArray & code() const;
@@ -52,14 +52,14 @@ public:
     const QByteArray & time() const;
     const QString rise() const;
     const QString risePercent() const ;
-    const int riseMode() const;
-    const bool arriveStopWin() const;
-    const bool arriveStopLose() const;
+    int riseMode() const;
+    bool arriveStopWin() const;
+    bool arriveStopLose() const;
     void setStopWinPrice(double price);
-    const double stopWinPrice() const;
+    double stopWinPrice() const;
     void setStopLosePrice(double price);
-    const double stopLosePrice() const;
-    const bool isDetailsValid() const;
+    double stopLosePrice() const;
+    bool isDetailsValid() const;
     const QString handoverRate() const;
 
 protected:
@@ -109,6 +109,8 @@ protected:
     void parseData(const QByteArray & data);
     void updateStockDetail(const QByteArray & stockCode, const QByteArray & data);
     void updateRemindContents(StockDetail * stock);
+    bool isTransactTime();
+    void startUpdateImmediately();
 
 protected:
     QList<StockDetail*> m_stocks;
@@ -121,5 +123,7 @@ protected:
     QNetworkReply *m_reply;
     bool m_bShouldSave;
     QString m_strRemind;
+    bool m_bNoRefreshAfterLaunch;
+    int m_refreshingCount;
 };
 #endif // STOCKPROVIDER_H

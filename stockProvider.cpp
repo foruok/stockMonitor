@@ -11,6 +11,7 @@
 #include <QMutexLocker>
 #include <QCoreApplication>
 #include <QNetworkReply>
+#include <QDateTime>
 
 #define REFRESH_PERIOD  1000
 #define STOCK_START_STRING "var hq_str_"
@@ -65,7 +66,7 @@ StockDetail::~StockDetail()
 {
 }
 
-const bool StockDetail::detailAvailable() const
+bool StockDetail::detailAvailable() const
 {
     return m_details.size() > stock_time;
 }
@@ -260,7 +261,7 @@ const QString StockDetail::risePercent() const
     return "-";
 }
 
-const int StockDetail::riseMode() const
+int StockDetail::riseMode() const
 {
     const QByteArray & baCurrent = currentPrice();
     if(baCurrent != "-")
@@ -278,7 +279,7 @@ const int StockDetail::riseMode() const
     return 0;
 }
 
-const bool StockDetail::arriveStopWin() const
+bool StockDetail::arriveStopWin() const
 {
     if(m_details.size() > 0 && m_stopWinPrice > 0.001)
     {
@@ -293,7 +294,7 @@ const bool StockDetail::arriveStopWin() const
     return false;
 }
 
-const bool StockDetail::arriveStopLose() const
+bool StockDetail::arriveStopLose() const
 {
     if(m_details.size() > 0 && m_stopLosePrice > 0.001)
     {
@@ -313,7 +314,7 @@ void StockDetail::setStopWinPrice(double price)
     m_stopWinPrice = price;
 }
 
-const double StockDetail::stopWinPrice() const
+double StockDetail::stopWinPrice() const
 {
     return m_stopWinPrice;
 }
@@ -323,12 +324,12 @@ void StockDetail::setStopLosePrice(double price)
     m_stopLosePrice = price;
 }
 
-const double StockDetail::stopLosePrice() const
+double StockDetail::stopLosePrice() const
 {
     return m_stopLosePrice;
 }
 
-const bool StockDetail::isDetailsValid() const
+bool StockDetail::isDetailsValid() const
 {
     return currentPrice() != "-";
 }
@@ -359,6 +360,8 @@ StockProvider::StockProvider(QObject *parent)
     , m_refreshInterval(3000)
     , m_reply(0)
     , m_bShouldSave(false)
+    , m_bNoRefreshAfterLaunch(true)
+    , m_refreshingCount(0)
 {
     readFromFile();
     if(m_stocks.size() > 0)
@@ -406,11 +409,12 @@ bool StockProvider::addStock(const QByteArray &stockCode)
     {
         m_stocks.append(new StockDetail(code));
         saveToFile();
-    }
-
-    if(count == 0 && m_stocks.count() > 0)
-    {
-        startUpdate();
+        m_bNoRefreshAfterLaunch = true;
+        //新增了股票，如当前未在更新，立即启动更新流程
+        if(m_reply == 0)
+        {
+            startUpdateImmediately();
+        }
     }
 
     return i == count;
@@ -516,6 +520,12 @@ void StockProvider::onRefreshFinished()
     parseData(m_reply->readAll());
     m_reply->deleteLater();
     m_reply = 0;
+    //刷新过程中没有添加新的股票才设置 m_bNoRefreshAfterLaunch
+    if(m_bNoRefreshAfterLaunch &&
+            m_refreshingCount >= m_stocks.size())
+    {
+        m_bNoRefreshAfterLaunch = false;
+    }
 
     int elapsed = m_updateElapsed.elapsed();
 
@@ -527,20 +537,7 @@ void StockProvider::timerEvent(QTimerEvent *e)
     int id = e->timerId();
     if(id == m_iRefreshTimer)
     {
-        killTimer(m_iRefreshTimer);
-        m_iRefreshTimer = 0;
-        if(m_iRefreshTimeoutTimer > 0)
-        {
-            killTimer(m_iRefreshTimeoutTimer);
-            m_iRefreshTimeoutTimer = 0;
-        }
-
-        int count = m_stocks.size();
-
-        if(count > 0)
-        {
-            startUpdate();
-        }
+        startUpdateImmediately();
     }
     else if(id == m_iRefreshTimeoutTimer)
     {
@@ -559,10 +556,8 @@ void StockProvider::timerEvent(QTimerEvent *e)
             m_reply->deleteLater();
             m_reply = 0;
         }
-        if(m_stocks.size() > 0)
-        {
-            startUpdate();
-        }
+
+        startUpdate();
     }
 }
 
@@ -674,11 +669,12 @@ void StockProvider::readFromFile()
 void StockProvider::startUpdate()
 {
     if(m_stocks.size() == 0 ) return;
+    if(!isTransactTime() && !m_bNoRefreshAfterLaunch) return;
 
     QString strUrl("http://hq.sinajs.cn/list=");
-    int count = m_stocks.size();
+    m_refreshingCount = m_stocks.size();
     StockDetail * detail = 0;
-    for(int i = 0; i < count; i++)
+    for(int i = 0; i < m_refreshingCount; i++)
     {
         detail = m_stocks.at(i);
         strUrl.append(detail->code());
@@ -689,7 +685,7 @@ void StockProvider::startUpdate()
         strUrl.chop(1);
     }
 
-    //qDebug() << "start get - " << strUrl;
+    qDebug() << "start get - " << strUrl;
     QUrl qurl(strUrl);
     QNetworkRequest req(qurl);
     m_reply = m_nam.get(req);
@@ -792,4 +788,31 @@ void StockProvider::updateRemindContents(StockDetail *stock)
                 .arg(stock->code().data())
                 .arg(stock->currentPrice().data());
     }
+}
+
+bool StockProvider::isTransactTime()
+{
+    static QTime amStartTime(9, 9, 50);
+    static QTime amStopTime(11, 31);
+    static QTime pmStartTime(12, 59, 50);
+    static QTime pmStopTime(15, 2);
+    QTime t = QTime::currentTime();
+    return ((t >= amStartTime && t <= amStopTime) ||
+            (t >= pmStartTime && t <= pmStopTime));
+}
+
+void StockProvider::startUpdateImmediately()
+{
+    if(m_iRefreshTimer > 0)
+    {
+        killTimer(m_iRefreshTimer);
+        m_iRefreshTimer = 0;
+    }
+    if(m_iRefreshTimeoutTimer > 0)
+    {
+        killTimer(m_iRefreshTimeoutTimer);
+        m_iRefreshTimeoutTimer = 0;
+    }
+
+    startUpdate();
 }

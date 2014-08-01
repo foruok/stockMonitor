@@ -19,6 +19,7 @@ public:
         m_detail = rhs.m_detail;
         m_provider = rhs.m_provider;
         m_indexInProvider = rhs.m_indexInProvider;
+        return *this;
     }
 
     QString loss();
