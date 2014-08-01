@@ -1,30 +1,22 @@
 import QtQuick 2.0
-import QtQuick.Window 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 
-Window {
+Rectangle {
     id: reminder;
-    minimumWidth: 300;
-    minimumHeight: 200;
-    width: 300;
-    height: 200;
-    x: 0;
-    y: 0;
-    visible: true;
-    title: qsTr("reminder setting");
+    border.width: 2;
+    border.color: "darkgray";
     signal canceled();
     signal applied();
 
     Component.onDestruction: console.log("reminder destruction");
-    onClosing:{
-        destroy(10);
-    }
 
     Text {
+        id: loseLabel;
         anchors.right: parent.horizontalCenter;
         anchors.rightMargin: 4;
         anchors.bottom: parent.verticalCenter;
+        anchors.bottomMargin: -24;
         text: qsTr("Lose");
         width: 100;
         height: 30;
@@ -37,7 +29,7 @@ Window {
         id: loseFrame;
         anchors.left: parent.horizontalCenter;
         anchors.leftMargin: 4;
-        anchors.bottom: parent.verticalCenter;
+        anchors.bottom: loseLabel.bottom;
         width: 100;
         height: 30;
         border.width: 1;
@@ -113,10 +105,10 @@ Window {
         id: cancel;
         anchors.right: parent.horizontalCenter;
         anchors.rightMargin: 4;
-        anchors.top: parent.verticalCenter;
-        anchors.topMargin: 8;
+        anchors.top: loseLabel.bottom;
+        anchors.topMargin: 16;
         width: 70;
-        height: 30;
+        height: 24;
         text: qsTr("Cancel");
         onClicked: reminder.canceled();
     }
@@ -124,10 +116,9 @@ Window {
         id: apply;
         anchors.left: parent.horizontalCenter;
         anchors.leftMargin: 4;
-        anchors.top: parent.verticalCenter;
-        anchors.topMargin: 8;
+        anchors.top: cancel.top;
         width: 70;
-        height: 30;
+        height: 24;
         text: qsTr("Apply");
         onClicked: {
             currentStock.loss = loseEditor.text;

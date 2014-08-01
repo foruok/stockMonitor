@@ -9,7 +9,9 @@ win32|unix|macx {
 SOURCES += main.cpp \
     stockModel.cpp \
     stockProvider.cpp \
-    stock.cpp
+    stock.cpp \
+    qDebug2Logcat.cpp
+
 
 # Installation path
 # target.path =
@@ -19,16 +21,21 @@ RESOURCES += \
 
 android-g++ {
     LIBS += -lgnustl_shared
+    QT += androidextras
+    SOURCES += notifyAndroid.cpp
+    HEADERS += notifyAndroid.h
 }
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 OTHER_FILES += \
     android/AndroidManifest.xml
+    android/src/an/qt/stockMonitor/StockMonitorActivity.java
 
 TRANSLATIONS = stockMonitor_zh.ts
 
 HEADERS += \
     stockModel.h \
     stockProvider.h \
-    stock.h
+    stock.h \
+    qDebug2Logcat.h

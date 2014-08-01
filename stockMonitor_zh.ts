@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
+    <name>QObject</name>
+    <message>
+        <source>stock monitor</source>
+        <translation>股票跟踪</translation>
+    </message>
+</context>
+<context>
     <name>TrayIcon</name>
     <message>
         <source>stock monitor</source>
@@ -51,24 +58,16 @@
         <translation>涨跌幅</translation>
     </message>
     <message>
-        <source>Turnover</source>
-        <translation>交易额</translation>
-    </message>
-    <message>
         <source>Up/Down</source>
         <translation>最高/最低</translation>
     </message>
     <message>
-        <source>Lose</source>
-        <translation>止损价</translation>
-    </message>
-    <message>
-        <source>Gain</source>
-        <translation>止盈价</translation>
-    </message>
-    <message>
         <source>add comments</source>
-        <translation>(股票代码只能是数字，一次添加一只；双击列表可添加提醒)</translation>
+        <translation>(代码只能是数字，一次添加一只；点击某只股票的"止盈/止损"列可编辑)</translation>
+    </message>
+    <message>
+        <source>Gain/Lose</source>
+        <translation>止盈/止损</translation>
     </message>
 </context>
 <context>

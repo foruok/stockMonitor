@@ -15,6 +15,11 @@ public:
         m_window = window;
     }
 
+    const QIcon & icon()
+    {
+        return m_icon;
+    }
+
 protected slots:
     void onTrayIconActivated( QSystemTrayIcon::ActivationReason reason);
     void onExit();
@@ -24,6 +29,7 @@ protected:
     QSystemTrayIcon * m_trayIcon;
     QMenu * m_trayMenu;
     QWindow * m_window;
+    QIcon m_icon;
 };
 
 #endif // TRAYICON_H

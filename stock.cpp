@@ -17,7 +17,7 @@ StockState::~StockState()
 
 QString StockState::loss()
 {
-    return QString::number(m_detail->stopLosePrice(), 'g', 2);
+    return QString::number(m_detail->stopLosePrice(), 'f', 2);
 }
 
 void StockState::setLoss(QString loss)
@@ -27,12 +27,11 @@ void StockState::setLoss(QString loss)
 
 QString StockState::gain()
 {
-    return QString::number(m_detail->stopWinPrice(), 'g', 2);
+    return QString::number(m_detail->stopWinPrice(), 'f', 2);
 }
 
 void StockState::setGain(QString gain)
 {
-    qDebug() << "setGain - " << gain;
     m_detail->setStopWinPrice(gain.toDouble());
 }
 

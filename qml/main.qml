@@ -1,19 +1,15 @@
 import QtQuick 2.0
-import QtQuick.Window 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.1
 
-Window {
+Rectangle {
     objectName: "rootWindow";
-    minimumHeight: 480;
-    minimumWidth: 800;
     width: 800;
     height: 480;
     x: 0;
     y: 0;
     visible: true;
-    title: qsTr("stock monitor");
     id: root;
     property Component reminderComponent: null;
     property var reminderWindow: null;
@@ -21,26 +17,26 @@ Window {
         if(reminderComponent == null){
             reminderComponent = Qt.createComponent("reminder.qml");
         }
-        reminderWindow = reminderComponent.createObject(root,
-                                                        {
-                                                        "modality": Qt.WindowModal
-                                                        });
+        reminderWindow = reminderComponent.createObject(
+                    root,
+                    {"width": 300, "height": 200,
+                        "x": (width - 300)/2,
+                        "y": (height - 200)/2} );
         reminderWindow.canceled.connect(onReminderSettingCanceled);
         reminderWindow.applied.connect(onReminderSettingApplied);
-        reminderWindow.visible = true;
     }
 
     function onReminderSettingCanceled(){
-        reminderWindow.close();
-        reminderWindow.destroy(10);
+        reminderWindow.destroy();
         reminderWindow = null;
+        update();
     }
 
     function onReminderSettingApplied(){
-        reminderWindow.close();
-        reminderWindow.destroy(10);
+        reminderWindow.destroy();
         reminderWindow = null;
         stockTable.model.saveState();
+        update();
     }
 
     Row {
@@ -246,16 +242,23 @@ Window {
             movable: false;
         }
         TableViewColumn{
-            role: "stopLose";
-            title: qsTr("Lose");
-            width: 85;
+            role: "gainAndLose";
+            title: qsTr("Gain/Lose");
+            width: 150;
             movable: false;
-        }
-        TableViewColumn{
-            role: "stopGain";
-            title: qsTr("Gain");
-            width: 85;
-            movable: false;
+            delegate: Text{
+                text: styleData.value;
+                verticalAlignment: Text.AlignVCenter;
+                horizontalAlignment: Text.AlignRight;
+                font.pixelSize: 20;
+                MouseArea {
+                    anchors.fill: parent;
+                    onClicked: {
+                        stockTable.model.updateCurrentStock(styleData.row);
+                        root.showReminder();
+                    }
+                }
+            }
         }
         TableViewColumn{
             width: 40;
@@ -295,10 +298,5 @@ Window {
         }
 
         model: stockModel;
-
-        onDoubleClicked: {
-            model.updateCurrentStock(row);
-            showReminder();
-        }
     }
 }

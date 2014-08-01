@@ -19,8 +19,7 @@ public:
         m_roleNames.insert(role++, "offset");
         m_roleNames.insert(role++, "percent");
         m_roleNames.insert(role++, "handover");
-        m_roleNames.insert(role++, "stopLose");
-        m_roleNames.insert(role++, "stopGain");
+        m_roleNames.insert(role++, "gainAndLose");
         m_roleNames.insert(role++, "upDown");
         m_roleNames.insert(role++, "turnover");
         m_currentStock.setProvider(&m_stocks);
@@ -70,13 +69,13 @@ QVariant StockModel::data(const QModelIndex &index, int role) const
     case 5: // handover
         return stock->handoverRate();
     case 6: // stopLose
-        return stock->stopLosePrice();
-    case 7: // stopGain
-        return stock->stopWinPrice();
-    case 8: // upDown
+        return QString("%1/%2")
+                .arg(stock->stopWinPrice(), 0, 'f', 2)
+                .arg(stock->stopLosePrice(), 0, 'f', 2);
+    case 7: // upDown
         return QString("%1/%2").arg(stock->todayHighestPrice().data())
                 .arg(stock->todayLowestPrice().data());
-    case 9: // turnover
+    case 8: // turnover
         return stock->transactionMoney();
     default:
         return QVariant();
