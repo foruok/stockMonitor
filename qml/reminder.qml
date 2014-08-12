@@ -1,6 +1,6 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.1
-import QtQuick.Controls.Styles 1.1
+import QtQuick 2.2
+import QtQuick.Controls 1.2
+import QtQuick.Controls.Styles 1.2
 
 Rectangle {
     id: reminder;
@@ -22,7 +22,7 @@ Rectangle {
         height: 30;
         horizontalAlignment: Text.AlignRight;
         verticalAlignment: Text.AlignVCenter;
-        font.pixelSize: 18;
+        font.pointSize: 16;
     }
 
     Rectangle {
@@ -45,7 +45,7 @@ Rectangle {
             height: parent.height;
             width: parent.width - 4;
             verticalAlignment: TextInput.AlignVCenter;
-            font.pixelSize: 20;
+            font.pointSize: 18;
             validator: DoubleValidator{}
             //text: currentStock.loss;
             //Component.onCompleted: text = currentStock.loss;
@@ -62,7 +62,7 @@ Rectangle {
         height: 30;
         horizontalAlignment: Text.AlignRight;
         verticalAlignment: Text.AlignVCenter;
-        font.pixelSize: 18;
+        font.pointSize: 16;
     }
 
     Rectangle {
@@ -86,7 +86,7 @@ Rectangle {
             height: parent.height;
             width: parent.width - 4;
             verticalAlignment: TextInput.AlignVCenter;
-            font.pixelSize: 20;
+            font.pointSize: 18;
             validator: DoubleValidator{}
             //text: currentStock.gain;
         }
@@ -97,7 +97,7 @@ Rectangle {
         anchors.bottomMargin: 4;
         anchors.horizontalCenter: parent.horizontalCenter;
         height: 26;
-        font.pixelSize: 18;
+        font.pointSize: 16;
         text: currentStock.name() + " : " + currentStock.price();
     }
 
@@ -108,7 +108,8 @@ Rectangle {
         anchors.top: loseLabel.bottom;
         anchors.topMargin: 16;
         width: 70;
-        height: 24;
+        height: 28;
+        style: Qt.createComponent("GradientButtonStyle.qml");
         text: qsTr("Cancel");
         onClicked: reminder.canceled();
     }
@@ -118,7 +119,8 @@ Rectangle {
         anchors.leftMargin: 4;
         anchors.top: cancel.top;
         width: 70;
-        height: 24;
+        height: 28;
+        style: Qt.createComponent("GradientButtonStyle.qml");
         text: qsTr("Apply");
         onClicked: {
             currentStock.loss = loseEditor.text;

@@ -669,7 +669,12 @@ void StockProvider::readFromFile()
 void StockProvider::startUpdate()
 {
     if(m_stocks.size() == 0 ) return;
-    if(!isTransactTime() && !m_bNoRefreshAfterLaunch) return;
+    if(!isTransactTime() && !m_bNoRefreshAfterLaunch)
+    {
+        //schedule later
+        m_iRefreshTimer = startTimer(m_refreshInterval);
+        return;
+    }
 
     QString strUrl("http://hq.sinajs.cn/list=");
     m_refreshingCount = m_stocks.size();
@@ -685,7 +690,7 @@ void StockProvider::startUpdate()
         strUrl.chop(1);
     }
 
-    qDebug() << "start get - " << strUrl;
+    //qDebug() << "start get - " << strUrl;
     QUrl qurl(strUrl);
     QNetworkRequest req(qurl);
     m_reply = m_nam.get(req);

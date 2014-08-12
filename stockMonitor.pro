@@ -29,7 +29,7 @@ android-g++ {
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 OTHER_FILES += \
-    android/AndroidManifest.xml
+    android/AndroidManifest.xml \
     android/src/an/qt/stockMonitor/StockMonitorActivity.java
 
 TRANSLATIONS = stockMonitor_zh.ts

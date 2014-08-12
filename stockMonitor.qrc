@@ -4,5 +4,6 @@
         <file>qml/reminder.qml</file>
         <file>stockMonitor_zh.qm</file>
         <file>res/stockIcon_32x32.png</file>
+        <file>qml/GradientButtonStyle.qml</file>
     </qresource>
 </RCC>

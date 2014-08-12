@@ -1,7 +1,7 @@
-import QtQuick 2.0
-import QtQuick.Controls 1.1
+import QtQuick 2.2
+import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
-import QtQuick.Controls.Styles 1.1
+import QtQuick.Controls.Styles 1.2
 
 Rectangle {
     objectName: "rootWindow";
@@ -17,13 +17,18 @@ Rectangle {
         if(reminderComponent == null){
             reminderComponent = Qt.createComponent("reminder.qml");
         }
-        reminderWindow = reminderComponent.createObject(
-                    root,
-                    {"width": 300, "height": 200,
-                        "x": (width - 300)/2,
-                        "y": (height - 200)/2} );
-        reminderWindow.canceled.connect(onReminderSettingCanceled);
-        reminderWindow.applied.connect(onReminderSettingApplied);
+        if(reminderWindow == null){
+            reminderWindow = reminderComponent.createObject(
+                        root,
+                        {
+                            "width": 300, "height": 200,
+                            "x": (width - 300)/2,
+                            "y": (height - 200)/2
+                        }
+                        );
+            reminderWindow.canceled.connect(onReminderSettingCanceled);
+            reminderWindow.applied.connect(onReminderSettingApplied);
+        }
     }
 
     function onReminderSettingCanceled(){
@@ -46,18 +51,18 @@ Rectangle {
         anchors.left: parent.left;
         anchors.leftMargin: 4;
         spacing: 8;
-        height: 30;
+        height: 28;
         Text {
             text: qsTr("Stock Code");
-            height: 30;
+            height: 28;
             verticalAlignment: Text.AlignVCenter;
-            font.pixelSize: 16;
+            font.pointSize: 12;
         }
         Rectangle {
             border.width: 1;
             border.color: "#2020A0";
-            width: 70;
-            height: 30;
+            width: 88;
+            height: 28;
 
             TextInput {
                 id: stockCodeEdit;
@@ -73,37 +78,14 @@ Rectangle {
                 height: parent.height;
                 width: parent.width - 4;
                 verticalAlignment: TextInput.AlignVCenter;
-                font.pixelSize: 18;
+                font.pointSize: 14;
             }
         }
         Button {
+            width: 70;
+            height: 28;
             text: qsTr("Add");
-            style: ButtonStyle {
-                background: Rectangle {
-                    implicitWidth: 70
-                    implicitHeight: 30
-                    border.width: control.activeFocus ? 2 : 1
-                    border.color: "#808080"
-                    radius: 4
-                    gradient: Gradient {
-                        GradientStop {
-                            position: 0 ;
-                            color: control.pressed ? "#A0A0A0" : "#D0D0D0";
-                        }
-                        GradientStop {
-                            position: 1 ;
-                            color: control.pressed ? "#D0D0D0" : "white";
-                        }
-                    }
-                }
-                label: Text {
-                    text: control.text;
-                    font.pixelSize: 18;
-                    horizontalAlignment: Text.AlignHCenter;
-                    verticalAlignment: Text.AlignVCenter;
-                }
-            }
-
+            style: Qt.createComponent("GradientButtonStyle.qml");
             onClicked: {
                 if(stockCodeEdit.length == 6)
                 {
@@ -113,9 +95,9 @@ Rectangle {
         }
         Text {
             text: qsTr("add comments");
-            height: 30;
+            height: 28;
             verticalAlignment: Text.AlignVCenter;
-            font.pixelSize: 16;
+            font.pointSize: 12;
             color: "darkgray";
         }
     }
@@ -124,7 +106,7 @@ Rectangle {
         id: stockTable;
         anchors.left: parent.left;
         anchors.top: actionArea.bottom;
-        anchors.topMargin: 4;
+        anchors.topMargin: 8;
         anchors.right: parent.right;
         anchors.bottom: parent.bottom;
         style: TableViewStyle {
@@ -150,7 +132,7 @@ Rectangle {
                     ctx.moveTo(0, canvasSize.height - 1);
                     ctx.lineTo(canvasSize.width, canvasSize.height - 1);
                     ctx.stroke();
-                    ctx.font = "22px sans-serif";
+                    ctx.font = "16pt sans-serif";
                     ctx.textAlign = "right";
                     ctx.fillStyle = "#000099";
                     ctx.textBaseline = "middle";
@@ -162,7 +144,7 @@ Rectangle {
                 text: styleData.value;
                 verticalAlignment: Text.AlignVCenter;
                 horizontalAlignment: Text.AlignRight;
-                font.pixelSize: 20;
+                font.pointSize: 13;
                 //color: stockTable.colorOf(styleData.row);
                 elide: styleData.elideMode;
                 onTextChanged: {
@@ -186,12 +168,12 @@ Rectangle {
         TableViewColumn{
             role: "code";
             title: qsTr("Code");
-            width: 76;
+            width: 86;
             movable: false;
             delegate: Text {
                 color: "#551A8B";
                 text: styleData.value;
-                font.pixelSize: 18;
+                font.pointSize: 13;
                 verticalAlignment: Text.AlignVCenter;
                 horizontalAlignment: Text.AlignRight;
             }
@@ -204,7 +186,7 @@ Rectangle {
             delegate: Text {
                 color: "#551A8B";
                 text: styleData.value;
-                font.pixelSize: 18;
+                font.pointSize: 13;
                 verticalAlignment: Text.AlignVCenter;
                 horizontalAlignment: Text.AlignRight;
             }
@@ -227,14 +209,7 @@ Rectangle {
             width: 80;
             movable: false;
         }
-        /*
-        TableViewColumn{
-            role: "turnover";
-            title: qsTr("Turnover");
-            width: 80;
-            movable: false;
-        }
-        */
+
         TableViewColumn{
             role: "upDown";
             title: qsTr("Up/Down");
@@ -250,7 +225,7 @@ Rectangle {
                 text: styleData.value;
                 verticalAlignment: Text.AlignVCenter;
                 horizontalAlignment: Text.AlignRight;
-                font.pixelSize: 20;
+                font.pointSize: 13;
                 MouseArea {
                     anchors.fill: parent;
                     onClicked: {
@@ -281,7 +256,9 @@ Rectangle {
                 }
                 MouseArea {
                     anchors.fill: parent;
-                    onClicked: stockTable.model.remove(styleData.row);
+                    onClicked: if(root.reminderWindow == null){
+                            stockTable.model.remove(styleData.row);
+                        }
                 }
             }
         }
