@@ -499,6 +499,8 @@ void StockProvider::setUpdateInterval(int seconds)
 void StockProvider::onRefreshError(QNetworkReply::NetworkError code)
 {
     m_reply->disconnect(this);
+    m_reply->deleteLater();
+    m_reply = 0;
     m_iRefreshTimer = startTimer(0);
 }
 
